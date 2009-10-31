@@ -1,6 +1,6 @@
 --- #YAML:1.1
 name:                   iv
-version:                0.113
+version:                0.114
 abstract:               An image viewer in Perl::Tk based on IrfanView
 license:                perl
 author:                 
@@ -8,9 +8,9 @@ author:
 generated_by:           Author
 distribution_type:      module
 provides:
-  Spreadsheet::Read:
+  App::tkiv:
     file:               iv
-    version:            0.113
+    version:            0.114
 requires:                       
   perl:                 5.008004
   Data::Peek:           0
