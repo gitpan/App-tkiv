@@ -1,0 +1,9 @@
+ChangeLog
+examples/.ivrc
+iv
+iv.pod
+Makefile.PL
+MANIFEST
+README
+t/00_pod.t
+META.yml                                 Module meta-data (added by MakeMaker)
