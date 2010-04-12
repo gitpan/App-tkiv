@@ -12,7 +12,7 @@ use warnings;
     $pid and exit 0;
     } # to_background
 
-our $VERSION = 0.116;
+eval q{use App::tkiv; $VERSION = $App::tkiv::VERSION};
 
 my %Option = (
     thumbsize		=> 80,		# in pixels
@@ -41,20 +41,23 @@ my %Option = (
     exifinfocolor	=> "Blue",
     scrollspeed		=> 3,
     titledirs		=> 0,
+    lastfirstnext	=> 0,
 
     keys_quit		=> [qw( Key-q Escape		)],
-    keys_quit_all	=> [qw( Shift-Q Control-Q	)],
+    keys_quit_all	=> [qw( Shift-q Control-q	)],
     keys_options	=> [qw( Key-o			)],
     keys_firstnext	=> [qw( Key-v			)],
     keys_firstpic	=> [qw( Key-0 Key-1  Key-a	)],
     keys_prevpic	=> [qw( Left  Up     BackSpace	)],
     keys_nextpic	=> [qw( Right Down   space	)],
     keys_lastpic	=> [qw( Key-9 Key-z		)],
+    keys_firstminimize	=> [qw( Alt-1 exclam Control-1	)],
     keys_fullscreen	=> [qw( Key-f F11		)],
     keys_fitwidth	=> [qw( Key-b			)],
     keys_fitheight	=> [qw( Key-h			)],
     keys_origsize	=> [qw( Key-o			)],
     keys_full_rc	=> [qw( Key-F			)],
+    keys_full_toggle	=> [qw( Control-f		)],
     keys_rotleft	=> [qw( Key-l			)],
     keys_rotexifl	=> [qw( Key-L			)],
     keys_rotright	=> [qw( Key-r			)],
@@ -181,6 +184,7 @@ eval {
 -x "/usr/bin/exiftran" and $exiftran = 1;
 
 my $pic = @ARGV && -f $ARGV[-1] && $ARGV[-1] =~ s{/([^/]+)$}{} ? $1 : "";
+   $pic and $opt_1 = 0;
 
 {   my @opt;
     my @ivrc_dirs = ("/etc", $ENV{HOME});
@@ -558,6 +562,12 @@ sub dtcmd
     $Option{thumbsortorder} =~ m/^(?:desc|reverse)/ and @img = reverse @img;
 
 #my $t0 = [ gettimeofday ];
+    my $earlyopennextdir = $Option{lastfirstnext} || $opt_1;
+    if ($earlyopennextdir && opendir my $dh, "..") {
+	my @dir = readdir $dh;
+	@dir > 100 and $earlyopennextdir = 0; # too slow
+	}
+
     $ni = @img;
     $opt_v and print STDERR "$ni images in $idir\n";
     foreach my $img (@img) {
@@ -788,7 +798,7 @@ sub dtcmd
 
 	    $old_iv && Exists ($old_iv) and $old_iv->destroy;
 
-	    my ($_pic, $_next_pic);
+	    my ($_pic, $_next_pic, $_next_firstnext, $quit);
 	    $_pic = sub {
 		@tn or return;
 		$ti = shift;
@@ -801,8 +811,35 @@ sub dtcmd
 		    $aid->cancel;
 		    $aid = undef;
 		    }
-		$_pic->($ti == $#tn ? 0 : $ti + 1);
+		$ti == $#tn
+		    ? $Option{lastfirstnext}
+			? $_next_firstnext->()
+			: $_pic->(0)
+		    : $_pic->($ti + 1);
 		}; # next_pic
+
+	    $_next_firstnext = sub {
+		$quit->();
+		$opt_1 = 2;
+		dirnext ();
+		};
+
+	    # Destroy
+	    $quit = sub {
+		$sls = 0;
+		$zs  = undef;
+		if ($aid) {
+		    $aid->cancel;
+		    $aid = undef;
+		    }
+		Exists ($fp) and $fp->destroy; $fp = undef;
+		Exists ($iv) and $iv->destroy; $iv = undef;
+		Exists ($bg) and $bg->destroy; $bg = undef;
+		$mw->update;
+		#$mw->grab;
+		#$mw->focusForce;
+		#$dt->focusForce;
+		}; # sub_quit
 
 	    my $_rotate = sub {
 		$sls = 0;
@@ -835,6 +872,10 @@ sub dtcmd
 
 		# Toggle Full-Screen
 		$W->bind ($_, $f11) for @{$Option{keys_fullscreen}};
+		$W->bind ($_, sub {
+		    $Option{imagefull} ^= 1;
+		    $f11->($opt_f = $Option{imagefull});
+		    }) for @{$Option{keys_full_toggle}};
 
 		# Go Full-Screen and store
 		$W->bind ($_, sub {
@@ -852,11 +893,26 @@ sub dtcmd
 		    $_pic->(0);
 		    }) for @{$Option{keys_firstpic}};
 
+		# First pic and minimize thumbnails
+		$W->bind ($_, sub {
+		    $sls = 0;
+		    $_pic->(0);
+		    $mw->iconify;
+		    $iv->raise;
+		    $iv->focusForce;
+		    }) for @{$Option{keys_firstminimize}};
+
 		# Next pic
 		$W->bind ($_, sub {
 		    $sls = 0;
 		    $_next_pic->();
 		    }) for @{$Option{keys_nextpic}};
+
+		# First pic of next set
+		$W->bind ($_, sub {
+		    $sls = 0;
+		    $_next_firstnext->();
+		    }) for @{$Option{keys_firstnext}};
 
 		# Prev pic
 		$W->bind ($_, sub {
@@ -870,31 +926,8 @@ sub dtcmd
 		    $_pic->($#tn);
 		    }) for @{$Option{keys_lastpic}};
 
-		# Destroy
-		my $quit = sub {
-		    $sls = 0;
-		    $zs  = undef;
-		    if ($aid) {
-			$aid->cancel;
-			$aid = undef;
-			}
-		    Exists ($fp) and $fp->destroy; $fp = undef;
-		    Exists ($iv) and $iv->destroy; $iv = undef;
-		    Exists ($bg) and $bg->destroy; $bg = undef;
-		    $mw->update;
-		    #$mw->grab;
-		    #$mw->focusForce;
-		    #$dt->focusForce;
-		    }; # sub_quit
-
 		$W->bind ($_, $quit)	for @{$Option{keys_quit}};
 		$W->bind ($_, \&exit)	for @{$Option{keys_quit_all}};
-
-		$W->bind ($_, sub {
-		    $quit->();
-		    $opt_1 = 2;
-		    dirnext ();
-		    }) for @{$Option{keys_firstnext}};
 
 		# Rotate right
 		$W->bind ($_, sub {
@@ -1164,12 +1197,10 @@ sub dtcmd
 
 	# Display the thumbnail
 	$w->update;
-	}
 
-    if ($opt_1) {
-	my $action = $opt_1;
-	$opt_1 = 0;
-	if (@tn) {
+	if ($opt_1 && $tr == 1) {
+	    my $action = $opt_1;
+	    $opt_1 = 0;
 	    $ti = 0;
 	    $f11->($vs);
 	    $action == 1 and $mw->iconify;
@@ -1179,6 +1210,7 @@ sub dtcmd
 	}
 
     $refreshing = "";
+    $earlyopennextdir and openupdir ();
     }; # dtcmd
 
 # Still need to find out how to (optionally) hide everything that
@@ -1221,15 +1253,22 @@ sub dirup
     dtcmd ($up);
     } # dirup
 
-sub dirnext
+sub openupdir
 {
     (my $up = $idir) =~ s:/[^/]+$:: or return;
 
     $dt->chdir ($up);
     $dt->open  ($up);
     $dt->chdir ($idir);
+    return ($dt->child_entries ($up, 1), $idir);
+    } # openupdir
 
-    my @dir = ($dt->child_entries ($up, 1), $idir);
+sub dirnext
+{
+    (my $up = $idir) =~ s:/[^/]+$:: or return;
+
+    my @dir = openupdir ();
+
     shift @dir while $dir[0] ne $idir;
     @dir > 1 && $dir[0] ne $dir[1] or return;
 
