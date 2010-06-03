@@ -41,6 +41,7 @@ my %Option = (
     exifinfocolor	=> "Blue",
     scrollspeed		=> 3,
     titledirs		=> 0,
+    titleindex		=> 0,
     lastfirstnext	=> 0,
 
     keys_quit		=> [qw( Key-q Escape		)],
@@ -69,6 +70,7 @@ my %Option = (
     keys_exif		=> [qw( Key-i			)],
     keys_exifinfo	=> [qw( Shift-I			)],
     keys_decoration	=> [qw( Key-d			)],
+    keys_focusthumbs	=> [qw( Key-t			)],
 
     keys_scroll_up	=> [qw( Alt-Up    Control-Up	)],
     keys_scroll_down	=> [qw( Alt-Down  Control-Down	)],
@@ -714,7 +716,9 @@ sub dtcmd
 		$bg->update;
 		}
 
-	    $iv = $mw->Toplevel (-title => $pr->{phys}{titl});
+	    my $ttl = $pr->{phys}{titl};
+	    $Option{titleindex} and $ttl .= " ".($ti + 1)."/$ni";
+	    $iv = $mw->Toplevel (-title => $ttl);
 	    $iv->geometry (loc ($sls ? $sp : $ip, $pr->{$size}{wdth}, $pr->{$size}{hght}));
 	    my $fp = $iv->Canvas (
 		-width  => $pr->{$size}{wdth},
@@ -898,9 +902,17 @@ sub dtcmd
 		    $sls = 0;
 		    $_pic->(0);
 		    $mw->iconify;
+		    $iv->deiconify;
 		    $iv->raise;
 		    $iv->focusForce;
 		    }) for @{$Option{keys_firstminimize}};
+
+		# Restore and focus thumbnail window
+		$W->bind ($_, sub {
+		    $mw->deiconify;
+		    $mw->raise;
+		    $mw->focusForce;
+		    }) for @{$Option{keys_focusthumbs}};
 
 		# Next pic
 		$W->bind ($_, sub {
@@ -1204,6 +1216,7 @@ sub dtcmd
 	    $ti = 0;
 	    $f11->($vs);
 	    $action == 1 and $mw->iconify;
+	    $iv->deiconify;
 	    $iv->raise;
 	    $iv->focusForce;
 	    }

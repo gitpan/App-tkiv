@@ -5,7 +5,7 @@ package App::tkiv;
 use strict;
 use warnings;
 
-our $VERSION = "0.120";
+our $VERSION = "0.121";
 
 1;
 
@@ -125,6 +125,12 @@ the previous settings.
     titleDirs		=> 0
 	The number of dir levels (counted from the end) that should be included
 	in the image title
+
+    titleIndex		=> 0
+	display the index of the image in the image title. (default off)
+	When on, the title of the image window is extended with " n/N", where
+	n is the index and N is the total number of images in the current
+	thumb-view
 
     maxX		=> 9999,
 	maximum horizontal resolution (some size quests are unreliable)
@@ -294,6 +300,10 @@ which iv was initially modelled
 						you might loose control or key
 						bindings.
 
+  keys_focusthumbs
+
+    t			-			Restore and focus thumbnails
+
   keys_imgpos_nw
 
     Alt-u		-			Set image position to nw
@@ -419,7 +429,7 @@ personal use, but was asked to make it publicly available as application.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2009 H.Merijn Brand
+Copyright (C) 2004-2010 H.Merijn Brand
 
 This software is free; you can redistribute it and/or modify
 it under the same terms as Perl itself.
