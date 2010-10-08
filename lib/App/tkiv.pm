@@ -5,7 +5,7 @@ package App::tkiv;
 use strict;
 use warnings;
 
-our $VERSION = "0.121";
+our $VERSION = "0.122";
 
 1;
 
@@ -48,7 +48,7 @@ the level to 1.
 
 =item -f
 
-Start in full-screen mode. Thumnail view will not be full-screen, but the
+Start in full-screen mode. Thumbnail view will not be full-screen, but the
 displayed images will. This overrules the default option from .ivrc files.
 
 =item -s
@@ -58,14 +58,15 @@ Start the slideview on open automatically.
 =item -1
 
 After populating the thumbnail view, immediately display the first image
-and minimize the thumnail view.
+and minimize the thumbnail view.
 
 =back
 
 =head2 Options
 
-Options are case insensitive. They are read from /etc/.ivrc, ~/.ivrc,
-./.ivrc, or image_dir/.ivrc (in that order if available).
+Options are case insensitive. They are read from /etc/iv.rc, /etc/.ivrc,
+~/iv.rc, ~/.ivrc, ./iv.rc, ./.ivrc, image_dir/iv.rc and image_dir/.ivrc
+(in that order if available).
 
 Not (yet) local per dir, so the last one read stays active and overrules
 the previous settings.
@@ -182,7 +183,7 @@ the previous settings.
 =head2 Key bindings
 
 Key bindings. Most are the same as the windows program IrfanView, after
-which iv was initially modelled
+which iv was initially modeled
 
 			Thumb view		Image view
   keys_quit
@@ -220,6 +221,10 @@ which iv was initially modelled
   keys_firstnext
 
     v			-			Open first pic in next folder
+
+  keys_firstprev
+
+    ^			-			Open first pic in prev folder
 
   keys_fullscreen
 
@@ -395,6 +400,8 @@ from ImageMagick is used.
 
  - Hide dirs above dt root
  - Allow a set of dirs from the command line
+ - Make pirstnext and firstprev look in the original folder if the
+   image folder actually been viewed is a symlink in the parent folder
 
 =item Animation
 
