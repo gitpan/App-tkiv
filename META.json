@@ -1,0 +1,75 @@
+{
+   "resources" : {
+      "repository" : "http://repo.or.cz/w/App-tkiv.git",
+      "license" : "http://dev.perl.org/licenses/"
+      },
+   "meta-spec" : {
+      "version" : "2.0",
+      "url" : "https://metacpan.org/module/CPAN::Meta::Spec?#meta-spec"
+      },
+   "test_requires" : {
+      "Test::More" : "0.88",
+      "Test::Harness" : "0"
+      },
+   "distribution_type" : "module",
+   "generated_by" : "Author",
+   "test_recommends" : {
+      "Test::More" : "0.98"
+      },
+   "version" : "0.123",
+   "name" : "App-tkiv",
+   "author" : [
+      "H.Merijn Brand <h.m.brand@xs4all.nl>"
+      ],
+   "license" : "perl",
+   "provides" : {
+      "App::tkiv" : {
+         "version" : "0.123",
+         "file" : "lib/App/tkiv.pm"
+         }
+      },
+   "optional_features" : {
+      "opt_xeleven_protocol" : {
+         "requires" : {
+            "X11::Protocol" : "0"
+            },
+         "description" : "Use X11::Protocol to get the screen size"
+         },
+      "opt_format_tiff" : {
+         "requires" : {
+            "Tk::TIFF" : "0"
+            },
+         "description" : "Support for TIFF"
+         }
+      },
+   "requires" : {
+      "Image::Info" : "0",
+      "Tk::Balloon" : "0",
+      "Tk::PNG" : "0",
+      "Tk::Dialog" : "0",
+      "Image::Size" : "0",
+      "Tk::Animation" : "0",
+      "Tk::Photo" : "0",
+      "Tk::Pane" : "0",
+      "Tk" : "804.027",
+      "Getopt::Long" : "2.27",
+      "File::Copy" : "0",
+      "Tk::Bitmap" : "0",
+      "Tk::DirTree" : "0",
+      "Tk::Pixmap" : "0",
+      "Data::Peek" : "0",
+      "perl" : "5.010",
+      "Image::ExifTool" : "0",
+      "Tk::JPEG" : "0",
+      "Tk::BrowseEntry" : "0"
+      },
+   "recommends" : {
+      "Getopt::Long" : "2.38",
+      "perl" : "5.014001",
+      "Tk" : "804.029_500"
+      },
+   "abstract" : "An image viewer in Perl::Tk based on IrfanView",
+   "configure_requires" : {
+      "ExtUtils::MakeMaker" : "0"
+      }
+   }

@@ -5,7 +5,7 @@ package App::tkiv;
 use strict;
 use warnings;
 
-our $VERSION = "0.122";
+our $VERSION = "0.123";
 
 1;
 
@@ -180,6 +180,13 @@ the previous settings.
 	for fine-grained scrolling. A low value enables precise positioning
 	with the scroll wheel, high values scroll fast.
 
+    dirTreeStartPos	=> 0.,
+	The initial position of the dir tree view relative from the top.
+	The default is to show the top of the tree if there is more than
+	the current window to be viewed and a scrollbar is shown. Setting
+	dirTreeStartPos to 1. will show the bottom of the tree on startup.
+	A value of .5 will show the middle.
+
 =head2 Key bindings
 
 Key bindings. Most are the same as the windows program IrfanView, after
@@ -254,24 +261,24 @@ which iv was initially modeled
 
   keys_rotleft
 
-    l			-			Rotate image left (90°
+    l			-			Rotate image left (90Â°
 						anti-clockwise)
 
   keys_rotexifl
 
-    L			-			Rotate image left (90° anti-
+    L			-			Rotate image left (90Â° anti-
 						clockwise) in the EXIF info,
 						and store the change in the
 						image file
 
   keys_rotright
 
-    r			-			Rotate image right (90°
+    r			-			Rotate image right (90Â°
 						clockwise)
 
   keys_rotexifr
 
-    R			-			Rotate image right (90°
+    R			-			Rotate image right (90Â°
 						clockwise) in the EXIF info,
 						and store the change in the
 						image file
