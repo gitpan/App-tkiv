@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                   App-tkiv
-version:                0.123
+version:                0.124
 abstract:               An image viewer in Perl::Tk based on IrfanView
 license:                perl
 author:
@@ -10,7 +10,7 @@ distribution_type:      module
 provides:
   App::tkiv:
     file:               lib/App/tkiv.pm
-    version:            0.123
+    version:            0.124
 requires:
   perl:                 5.010
   Data::Peek:           0

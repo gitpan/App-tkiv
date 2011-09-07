@@ -16,7 +16,7 @@
    "test_recommends" : {
       "Test::More" : "0.98"
       },
-   "version" : "0.123",
+   "version" : "0.124",
    "name" : "App-tkiv",
    "author" : [
       "H.Merijn Brand <h.m.brand@xs4all.nl>"
@@ -24,7 +24,7 @@
    "license" : "perl",
    "provides" : {
       "App::tkiv" : {
-         "version" : "0.123",
+         "version" : "0.124",
          "file" : "lib/App/tkiv.pm"
          }
       },

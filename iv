@@ -164,7 +164,7 @@ use Tk::Balloon;
 use Tk::BrowseEntry;
 use Tk::Animation;
 use File::Copy;
-use Data::Peek;
+#use Data::Peek;
 
 our $exiftool = 0;
 our $iinftool = 0;
