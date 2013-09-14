@@ -307,10 +307,10 @@ sub bind_wheel
 {
     my ($w, $sw, $u) = @_;
 
-    $w->bind ($_, sub { $sw->yview (scroll => -$u, "units") }) for "<4>",            @{$Option{keys_scroll_up}};
-    $w->bind ($_, sub { $sw->yview (scroll =>  $u, "units") }) for "<5>",            @{$Option{keys_scroll_down}};
-    $w->bind ($_, sub { $sw->xview (scroll => -$u, "units") }) for "<Alt-Button-4>", @{$Option{keys_scroll_left}};
-    $w->bind ($_, sub { $sw->xview (scroll =>  $u, "units") }) for "<Alt-Button-5>", @{$Option{keys_scroll_right}};
+    $w->bind ($_, sub { $sw->yview (scroll => -$u, "units") }) for "<4>", @{$Option{keys_scroll_up}};
+    $w->bind ($_, sub { $sw->yview (scroll =>  $u, "units") }) for "<5>", @{$Option{keys_scroll_down}};
+    $w->bind ($_, sub { $sw->xview (scroll => -$u, "units") }) for "<6>", @{$Option{keys_scroll_left}},  "<Alt-Button-4>", "<Control-Button-4>", "<Shift-Button-4>";
+    $w->bind ($_, sub { $sw->xview (scroll =>  $u, "units") }) for "<7>", @{$Option{keys_scroll_right}}, "<Alt-Button-5>", "<Control-Button-5>", "<Shift-Button-5>";
     } # bind_wheel
 
 my $pxyid = 10000;
@@ -561,7 +561,13 @@ sub dtcmd
 	      sort { $tsort{$Option{thumbsorting}}->() }
 	      map  { my $seq = m/(\d+)/ ? $1 : 0;
 	             [ $_, $seq, (stat "$Idir/$_")[7,9], lc $_, rand 1 ] }
-	      grep { my $s = -s "$Idir/$_"; $s and $s > 100 } # Sanity check. Minimal image size 100
+	      grep { my $if = "$Idir/$_";
+		     # Sanity check. Minimal image size 100
+		     my $s = -s $if;
+		     # Skip MacOS working copies
+		     $if =~ s{/\._([^/]+)$}{/$1} && -s $if and $s = 0;
+		     $s and $s > 100;
+		     }
 	      # convert can't deal with .ico files (yet)
 	      # Tk can deal with Tiff/NEF as of 804.027_501 with Tk::TIFF
 	      grep m/\.(jpe?g|gif|x[pb]m|png|bmp|tiff?|nef)$/i => readdir IDIR;

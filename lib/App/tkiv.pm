@@ -5,11 +5,13 @@ package App::tkiv;
 use strict;
 use warnings;
 
-our $VERSION = "0.124";
+our $VERSION = "0.125";
 
 1;
 
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -443,7 +445,7 @@ personal use, but was asked to make it publicly available as application.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2010 H.Merijn Brand
+Copyright (C) 2004-2013 H.Merijn Brand
 
 This software is free; you can redistribute it and/or modify
 it under the same terms as Perl itself.
