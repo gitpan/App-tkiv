@@ -5,7 +5,7 @@ Description:
     iv is an image viewer in Perl::Tk based on IrfanView
 
 Copying:
-    Copyright (c) 2004-2013 H.Merijn Brand.  All rights reserved.
+    Copyright (c) 2004-2015 H.Merijn Brand.  All rights reserved.
 
     This program is free software; you can redistribute it and/or modify
     it under the same terms as Perl itself.
@@ -24,7 +24,13 @@ Copying:
 Prerequisites:
     A perl with defined-or (perl 5.8.4 + defined-or, 5.10.x or higher), Tk,
     the plethora of Tk::* image format modules, some Image::* modules (see
-    Makefile.PL and/or META.yml) and ImagaMagick (not the perl module).
+    Makefile.PL and/or META.yml) and ImagaMagick (not the perl module) for
+    iv uses the "convert" tool.
+
+    On Windows I'd suggest to use IrfanView from http://www.irfanview.com
+    plus its Plugins/AddOns instead of iv.
+
+    TIFF images will only display if you additionally install Tk::TIFF.
 
 Build/Installation:
     Standard build/installation:
